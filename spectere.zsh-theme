@@ -87,6 +87,7 @@ is_root() {
 # 1 - Username foreground.
 # 2 - Hostname foreground.
 # 3 - root lightning symbol foreground.
+# 4 - root hostname foreground.
 seg_username() {
 	if [[ $(is_root) -gt 0 ]]; then
 		echo -n "$(p $3 ${sym_zigzag}) "
@@ -94,8 +95,12 @@ seg_username() {
 
 	echo -n "$(p $1 '%n')"
 
-	if [[ "${SSH_CLIENT}" != "" ]]; then
-		echo -n "$(p $2 '@%m')"
+	if [[ "${SSH_CLIENT}" != "" || $(is_root) -gt 0 ]]; then
+		if [[ $(is_root) -gt 0 ]]; then
+			echo -n "$(p $4 '@%m')"
+		else
+			echo -n "$(p $2 '@%m')"
+		fi
 	fi
 }
 
@@ -132,7 +137,7 @@ prompt() {
 		sBg 55
 	fi
 	echo -n ' '
-	seg_username 15 183 228
+	seg_username 15 183 228 218
 	sep 18
 	seg_path 224
 
