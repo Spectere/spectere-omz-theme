@@ -43,6 +43,10 @@ sym_funnel_right="\ue0d4"
 
 current_bg=0
 
+function basic_prompt_char {
+        if [ $UID -eq 0 ]; then echo "#"; else echo $; fi
+}
+
 # 1 - New background color.
 sBg() {
 	echo -n "%K{$1}"
@@ -153,4 +157,12 @@ prompt() {
 	sep 0
 }
 
-PROMPT='$(prompt)'
+if [[ "${TERM}" = "linux" ]]; then
+	PROMPT='%(!.%{$fg_bold[red]%}.%{$fg_bold[green]%}%n@)%m %{$fg_bold[blue]%}%(!.%1~.%~) $(git_prompt_info)$(basic_prompt_char)%{$reset_color%} '
+
+	ZSH_THEME_GIT_PROMPT_PREFIX="("
+	ZSH_THEME_GIT_PROMPT_SUFFIX=") "
+else
+	PROMPT='$(prompt)'
+fi
+
