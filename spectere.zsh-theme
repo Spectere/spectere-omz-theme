@@ -72,6 +72,14 @@ sep() {
 	echo -n " "
 }
 
+end_prompt() {
+	local old_bg=$current_bg
+	echo -n " "
+	eBg
+	p $old_bg "${sym_rightarrow}"
+	echo -n " "
+}
+
 is_git() {
 	if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
 		echo 1
@@ -154,7 +162,7 @@ prompt() {
 		seg_git 0
 	fi
 
-	sep 0
+	end_prompt
 }
 
 if [[ "${TERM}" = "linux" ]]; then
