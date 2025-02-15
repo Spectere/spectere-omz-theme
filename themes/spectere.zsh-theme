@@ -41,6 +41,8 @@ sym_lego_side_right="\ue0d1"
 sym_funnel_left="\ue0d2"
 sym_funnel_right="\ue0d4"
 
+emoji_container="📦"
+
 current_bg=0
 
 function basic_prompt_char {
@@ -78,6 +80,14 @@ end_prompt() {
 	eBg
 	p $old_bg "${sym_rightarrow}"
 	echo -n " "
+}
+
+is_container() {
+	if [[ -n $container ]]; then
+		echo 1
+	else
+		echo 0
+	fi
 }
 
 is_git() {
@@ -139,17 +149,45 @@ seg_git() {
 	fi
 }
 
+# 1 - Foreground
+seg_container() {
+	local name
+
+	name="${CONTAINER_ID}"
+
+	sBg 235
+	if [[ -n ${name} ]]; then
+		p $1 " ${emoji_container} ${name}"
+	else
+		p $1 " ${emoji_container}"
+	fi
+}
+
 # The thing that puts all the things together into one larger thing!
 prompt() {
+	local uidBg isContainer
+
+	isContainer=$(is_container)
+
 	if [[ $(is_root) -gt 0 ]]; then
 		# root user/sudoer
-		sBg 52
+		uidBg=52
 	else
 		# normal user
-		sBg 55
+		uidBg=55
 	fi
-	echo -n ' '
-	seg_username 15 183 228 218
+
+	if [[ ${isContainer} -eq 1 ]]; then
+		seg_container 15
+		sep ${uidBg}
+	fi
+
+	sBg ${uidBg}
+
+	if [[ ${isContainer} -eq 0 ]]; then
+		echo -n ' '
+	fi
+	seg_username 15 183 228 218 ${isContainer}
 	sep 18
 	seg_path 224
 
