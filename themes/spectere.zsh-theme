@@ -178,7 +178,7 @@ prompt() {
 	fi
 
 	if [[ ${isContainer} -eq 1 ]]; then
-		seg_container 15
+		seg_container 255
 		sep ${uidBg}
 	fi
 
@@ -187,7 +187,7 @@ prompt() {
 	if [[ ${isContainer} -eq 0 ]]; then
 		echo -n ' '
 	fi
-	seg_username 15 183 228 218 ${isContainer}
+	seg_username 255 183 228 218 ${isContainer}
 	sep 18
 	seg_path 224
 
@@ -197,7 +197,7 @@ prompt() {
 		else
 			sep 48
 		fi
-		seg_git 0
+		seg_git 16
 	fi
 
 	end_prompt
